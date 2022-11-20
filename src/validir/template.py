@@ -5,8 +5,11 @@
 from __future__ import annotations
 
 # STL
+import os
 import typing
+import functools
 from collections import defaultdict
+from operator import getitem
 
 # YAML
 import yaml
@@ -56,7 +59,34 @@ class Template:
     return self.root.dump()
 
   @staticmethod
-  def construct(dirname : str) -> Template:
-    """ Factory method to construct from a directory. """
-    # I am a stub
-    return Template("""Stubby""")
+  def construct(dirname : str, skip_hidden : bool = True) -> Template:
+    """ Factory method to construct from a directory.
+    
+    Args:
+      dirname:      The directory to use as a template.
+      skip_hidden:  Whether or not to consider hidden files.
+    """
+    # extract all files via os.walk
+    intermediary = {"skip_hidden": skip_hidden, "root": []}
+
+    # walk through all directories / files
+    for root, dirs, files in os.walk(dirname):
+
+      # remove top level root directory and get list of sub-directories
+      roots = root.replace(dirname, "", 1).split(os.sep)[1:]
+
+      # get target node in our dictionary
+      handle = intermediary["root"]
+      for path in roots:
+        handle = next(item[path] for item in handle if (isinstance(item, dict) and path in item))
+      
+      # naively add directories to their place in the hierarchy
+      for directory in dirs:
+        handle.append({directory : []})
+
+      # add files based on our desired level of strictness
+      for filename in files:
+        handle.append(filename)
+
+    # we dump this back into yaml format (which is kinda silly) and use nominal constructor
+    return Template(yaml.dump(intermediary))
