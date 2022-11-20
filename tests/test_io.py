@@ -4,8 +4,8 @@
 # pytest
 import pytest
 
-# dir_validate
-from dir_validate.template import Template
+# validir
+from validir.template import Template
 
 # define some valid and invalid documents
 simple_valid_docs = [

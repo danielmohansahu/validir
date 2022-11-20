@@ -1,2 +1,2 @@
-# dir_validate
+# validir
 Python package to perform Directory Validation against a template.

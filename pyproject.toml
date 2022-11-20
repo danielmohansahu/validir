@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dir_validate"
+name = "validir"
 version = "0.0.1"
 authors = [
   { name="Daniel M. Sahu", email="danielmohansahu@gmail.com" },
@@ -21,5 +21,5 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/danielmohansahu/dir_validate"
-"Bug Tracker" = "https://github.com/danielmohansahu/dir_validate/issues"
+"Homepage" = "https://github.com/danielmohansahu/validir"
+"Bug Tracker" = "https://github.com/danielmohansahu/validir/issues"
