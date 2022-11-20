@@ -20,6 +20,9 @@ dependencies = [
     "pyyaml"
 ]
 
+[project.scripts]
+validir = "validir.cli:main"
+
 [project.urls]
 "Homepage" = "https://github.com/danielmohansahu/validir"
 "Bug Tracker" = "https://github.com/danielmohansahu/validir/issues"
