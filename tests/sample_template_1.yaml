@@ -1,0 +1,13 @@
+# nontrivial sample template.
+skip_hidden: False  # Always consider hidden files.
+allow_extra: True   # Don't consider extra files as errors.
+root:
+  - ".hidden_file"
+  - "*.ext"
+  - "strict_match_file.txt"
+  - "required_directory":
+    - "required_directory_2":
+      - "required_file.test"
+      - "[optional_file.test]"
+  - "[optional_directory]":
+    - "optional_directory"

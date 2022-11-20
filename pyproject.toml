@@ -16,6 +16,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+    "pyyaml"
+]
 
 [project.urls]
 "Homepage" = "https://github.com/danielmohansahu/dir_validate"
