@@ -17,46 +17,86 @@ import yaml
 # Custom
 from .types import Directory, File
 
-def recursively_build_tree(node, dir, skip_hidden):
+def recursively_build_tree(node : [str, list, dict], result : [File, Dictionary], skip_hidden : bool):
   # helper function to convert a dictionary of YAML keys to a linked tree structure
   if isinstance(node, str):
     if not (f := File.load(node)).hidden or not skip_hidden:
-      dir.children.append(f)
+      result.children.append(f)
   elif isinstance(node, list):
     for item in node:
-      recursively_build_tree(item, dir, skip_hidden)
+      recursively_build_tree(item, result, skip_hidden)
   elif isinstance(node, dict):
     for key,val in node.items():
       if not (d := Directory.load(key)).hidden or not skip_hidden:
-        dir.children.append(d)
-        recursively_build_tree(val, dir.children[-1], skip_hidden)
+        result.children.append(d)
+        recursively_build_tree(val, result.children[-1], skip_hidden)
   else:
     raise KeyError("Encountered unexpected key type - only [str, list, dict] are supported.")
+
+def recursively_compare_trees(nodes : Sequence[File, Directory], templates : Sequence[File, Directory], allow_extra : bool) -> bool:
+  # verify that we have a match for all of our templates
+  for template in templates:
+    success = False
+    for node in nodes:
+      if node == template:
+        # great! now check the children
+        success = True if isinstance(node, File) else recursively_compare_trees(node.children, template.children, allow_extra)
+    # check if we failed to find a particular template; this warrants exiting early
+    if not success:
+      print(f"Missing template item '{template.name}'!")
+      return False
+
+  # check if we want to also verify there aren't any extra files floating around
+  if not allow_extra:
+    for node in nodes:
+      success = False
+      for template in templates:
+        if node == template:
+          # great! now check the children
+          success = True if isinstance(node, File) else recursively_compare_trees(node.children, template.children, allow_extra)
+      # check if we failed to find a particular node; this warrants exiting early
+      if not success:
+        print(f"Found an extra object floating around: '{node.name}'")
+        return False
+
+  # success
+  return True
 
 class Template:
   def __init__(self, stream):
     # attempt to perform a pure yaml load
-    raw = yaml.safe_load(stream)
+    self.root, self.skip_hidden = self.load(stream)
+
+  def validate(self, dirname : str, allow_extra : bool = True) -> bool:
+    """ Validate the given directory against our schema. """
     
+    # load directory as its own tree
+    other = Template.construct(dirname, self.skip_hidden)
+
+    # perform a deep comparison
+    return recursively_compare_trees([other.root], [self.root], allow_extra)
+    
+  def dump(self) -> dict:
+    """ Dump internal representation to a dictionary. """
+    return self.root.dump()
+
+  @staticmethod
+  def load(stream : str):
+    """ Convert a YAML representation into our internal data structure. """
+    raw = yaml.safe_load(stream)
+
     # validate
     assert "root" in raw, "Missing required keyword 'root'."
     assert isinstance(raw["root"], list), "'root' key must be a list."
 
     # get other options
-    self.skip_hidden = raw.get("skip_hidden", True)
+    skip_hidden = raw.get("skip_hidden", True)
 
     # recursively convert to our internal tree representation
-    self.root = Directory("root", False, [])
-    recursively_build_tree(raw["root"], self.root, self.skip_hidden)
-
-  def validate(self, dirname : str) -> bool:
-    """ Validate the given directory against our schema. """
-    # I am a stub
-    return True
+    root = Directory("root", False, [])
+    recursively_build_tree(raw["root"], root, skip_hidden)
     
-  def dump(self) -> dict:
-    """ Dump internal representation to a dictionary. """
-    return self.root.dump()
+    return root, skip_hidden
 
   @staticmethod
   def construct(dirname : str, skip_hidden : bool = True) -> Template:
