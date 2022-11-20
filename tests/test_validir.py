@@ -74,13 +74,27 @@ def test_transitive():
 
 def test_simple_directory():
     """ Construct a variety of templates from a sample directory; validate against real directory. """
+    # the subject of our analysis
+    directory = "simple_directory"
     
     # generate template
-    template_hidden = generate_from_directory("simple_directory", skip_hidden=False)
-    template_no_hidden = generate_from_directory("simple_directory", skip_hidden=True)
+    template_hidden = generate_from_directory(directory, skip_hidden=False)
+    template_no_hidden = generate_from_directory(directory, skip_hidden=True)
     
     # compare to "ground truth"
     with open("expected/simple_directory_hidden.yaml", "r") as yamlfile:
         assert yaml.safe_load(yamlfile)["root"] == template_hidden.dump()["root"]
     with open("expected/simple_directory_no_hidden.yaml", "r") as yamlfile:
         assert yaml.safe_load(yamlfile)["root"] == template_no_hidden.dump()["root"]
+    
+    # perform validation against real data
+    assert (template_hidden.validate(directory))
+    assert (template_no_hidden.validate(directory))
+
+    # now make sure we catch missing files
+    assert (not template_hidden.validate("missing_directory", allow_extra=True))
+    assert (not template_no_hidden.validate("missing_directory", allow_extra=True))
+    
+    # and make sure we catch extra files (if we're being strict)
+    assert (not template_hidden.validate("missing_directory", allow_extra=False))
+    assert (not template_no_hidden.validate("missing_directory", allow_extra=False))
