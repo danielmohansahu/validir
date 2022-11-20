@@ -9,6 +9,7 @@ import yaml
 
 # validir
 from validir.template import Template
+from validir.validate import generate_from_directory
 
 # define some valid and invalid documents
 simple_valid_docs = [
@@ -32,22 +33,20 @@ simple_invalid_docs = [
 """
 ]
 
-def test_simple_load():
-    # make sure we succeed when loading these
+def test_load():
+    # make sure we succeed when loading these simple objects
     for doc in simple_valid_docs:
         try:
             Template(doc)
         except Exception as e:
             assert False, f"Load failure: {e}"
 
-def test_simple_load_bad():
-    # make sure we fail when loading these
+    # make sure we fail when loading these simple invalid objects
     for doc in simple_invalid_docs:
         with pytest.raises(Exception):
             Template(doc)
 
-def test_load():
-    # make sure we succeed when loading this
+    # make sure we succeed when loading this more complex version
     with open("samples/sample_template_1.yaml", "r") as yamlfile:
         try:
             Template(yamlfile)
@@ -72,4 +71,16 @@ def test_transitive():
     # compare parsed version to original
     parsed = t.dump()
     assert (parsed["root"] == original["root"])
+
+def test_simple_directory():
+    """ Construct a variety of templates from a sample directory; validate against real directory. """
     
+    # generate template
+    template_hidden = generate_from_directory("simple_directory", skip_hidden=False)
+    template_no_hidden = generate_from_directory("simple_directory", skip_hidden=True)
+    
+    # compare to "ground truth"
+    with open("expected/simple_directory_hidden.yaml", "r") as yamlfile:
+        assert yaml.safe_load(yamlfile)["root"] == template_hidden.dump()["root"]
+    with open("expected/simple_directory_no_hidden.yaml", "r") as yamlfile:
+        assert yaml.safe_load(yamlfile)["root"] == template_no_hidden.dump()["root"]
