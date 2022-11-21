@@ -1,0 +1,1 @@
+The files in this directory are used to verify proper parsing of input templates.
