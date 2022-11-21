@@ -1,0 +1,6 @@
+root:
+- optional: []
+- optional.txt
+- optional
+- optional.py
+- optional.csv

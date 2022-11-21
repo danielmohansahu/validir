@@ -1,0 +1,7 @@
+root:
+- optional: []
+- .gitkeep
+- optional.txt
+- optional
+- optional.py
+- optional.csv
