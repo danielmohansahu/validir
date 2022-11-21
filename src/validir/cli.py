@@ -21,43 +21,33 @@ def parse_args():
     validate_parser = subparsers.add_parser('validate', help='Validate a given directory.')
     validate_parser.add_argument('dirname', help='Root of directory to validate.')
     validate_parser.add_argument('template', help='Template file (yaml format).')
-    validate_parser.set_defaults(func=lambda args: validate(args.dirname, args.template))
+    validate_parser.set_defaults(func=validate)
 
     generate_parser = subparsers.add_parser('generate', help='Generate a template file from a target directory.')
     generate_parser.add_argument('dirname', help='Root of directory to validate.')
     generate_parser.add_argument('output', help='Output file (yaml format).')
     generate_parser.add_argument('--process-hidden', action="store_true", help="Don't skip hidden files and directories.")
-    generate_parser.set_defaults(func=lambda args: generate_from_directory(args.dirname, args.output, not args.process_hidden))
+    generate_parser.set_defaults(func=generate)
     
     return parser.parse_args()
      
-def generate_from_directory(dirname : str, output : str = None, skip_hidden : bool = True):
-  """ Construct a Template for the given directory.
-  
-  Args:
-    dirname:      The directory to use as a template.
-    output:       A file to save output; if not specified the template object is returned.
-    skip_hidden:  Whether or not to ignore hidden files.
-  """
+def generate(args):
   # construct core template
-  template = Template.construct(dirname, skip_hidden)
+  template = Template.construct(args.dirname, args.skip_hidden)
 
-  if output is None:
-    return template
-  else:
-    # write to file
-    with open(output, "w") as yamlfile:
-      yaml.dump(template.dump(), yamlfile)
-    print(f"Wrote extracted template from '{dirname}' to '{output}'")
+  # write to file
+  with open(args.output, "w") as yamlfile:
+    yaml.dump(template.dump(), yamlfile)
+  print(f"Wrote extracted template from '{args.dirname}' to '{args.output}'")
 
-def validate(dirname : str, templatefile : str) -> bool:
+def validate(args) -> bool:
   """ Validate the given directory against the given template. """
-  template = Template.generate(templatefile)
+  template = Template.generate(args.templatefile)
   
-  if (success := template.validate(dirname)):
-    print(f"Directory {dirname} matches template {templatefile}")
+  if (success := template.validate(args.dirname)):
+    print(f"Directory {args.dirname} matches template {args.templatefile}")
   else:
-    print(f"Directory {dirname} DOES NOT MATCH template {templatefile}")
+    print(f"Directory {args.dirname} DOES NOT MATCH template {args.templatefile}")
   return success
 
 def main():

@@ -9,9 +9,9 @@ import yaml
 
 # validir
 from validir.template import Template
-from validir.validate import generate_from_directory
 
-# define some valid and invalid documents
+############################# TEST OBJECTS ####################################
+
 simple_valid_docs = [
 """root:
     - foo
@@ -21,6 +21,7 @@ simple_valid_docs = [
         - bar1
 """
 ]
+
 simple_invalid_docs = [
 """root:
     foo:
@@ -32,6 +33,8 @@ simple_invalid_docs = [
 """foo:
 """
 ]
+
+############################ TEST FUNCTIONS ###################################
 
 def test_load():
     # make sure we succeed when loading these simple objects
@@ -78,8 +81,8 @@ def test_simple_directory():
     directory = "simple_directory"
     
     # generate template
-    template_hidden = generate_from_directory(directory, skip_hidden=False)
-    template_no_hidden = generate_from_directory(directory, skip_hidden=True)
+    template_hidden = Template.construct(directory, skip_hidden=False)
+    template_no_hidden = Template.construct(directory, skip_hidden=True)
     
     # compare to "ground truth"
     with open("expected/simple_directory_hidden.yaml", "r") as yamlfile:
