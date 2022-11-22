@@ -6,13 +6,9 @@ from __future__ import annotations
 
 # STL
 import os
-import re
 import enum
 from typing import NamedTuple
 from fnmatch import fnmatch
-
-# compile regex to look for fnmatch type strings
-RE_FNMATCH_CHARS = re.compile('[?*\[\]]')
 
 class File(NamedTuple):
   """ Core representation of a Node for a File. """
@@ -30,7 +26,8 @@ class File(NamedTuple):
   @staticmethod
   def load(string : str) -> File:
     """ Construct a File object from the given string representation. """
-    return File(string, string[0] == ".", RE_FNMATCH_CHARS.match(string))
+    required = not ( ('*' in string) or ('?' in string) or ('[' in string) or (']' in string) )
+    return File(string, string[0] == ".", required)
     
   def dump(self) -> str:
     """ Convert to a string representation. """
@@ -53,8 +50,9 @@ class Directory(NamedTuple):
   @staticmethod
   def load(string : str) -> Directory:
     """ Construct a dictionary object from the given string representation. """
-    return Directory(string, string[0] == ".", RE_FNMATCH_CHARS.match(string), [])
-    
+    required = not ( ('*' in string) or ('?' in string) or ('[' in string) or (']' in string) )
+    return Directory(string, string[0] == ".", required, [])
+
   def dump(self) -> dict:
     """ Recursively generate a dict representation from children. """
     return {self.name : [c.dump() for c in self.children]}

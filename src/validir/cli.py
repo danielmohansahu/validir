@@ -42,6 +42,7 @@ def generate(args):
   assert (os.path.isdir(args.dirname)), "Input directory must be, well, a directory."
   
   # construct core template
+  print(f"Generating template from '{args.dirname}'")
   template = Template.construct(args.dirname, args.check_hidden, args.allow_extra)
 
   # write to file

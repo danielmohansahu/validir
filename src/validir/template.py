@@ -34,32 +34,44 @@ def recursively_build_tree(node : [str, list, dict], result : [File, Dictionary]
     raise KeyError("Encountered unexpected key type - only [str, list, dict] are supported.")
 
 def recursively_compare_trees(nodes : Sequence[File, Directory], templates : Sequence[File, Directory], allow_extra : bool) -> bool:
-  # verify that we have a match for all of our templates
-  for template in templates:
+  """ Core matching logic to verify the correctness of a given directory.
+  
+  Essentially this boils down to the following set of rules for a given layer:
+   - All required template items (files and directories) must have a corresponding node.
+   - If not 'allow_extra':
+     - All nodes must have a corresponding template item. 
+  """
+  print(f"  checking\n\t{[n.name for n in nodes]} \n\t{[t.name for t in templates]}")
+  
+  # verify that we have a match for all of our required template items
+  for template in [t for t in templates if t.required]:
+    # iterate through the nodes, trying to find a match
     success = False
     for node in nodes:
       if node == template:
-        # great! now check the children
-        success = True if isinstance(node, File) else recursively_compare_trees(node.children, template.children, allow_extra)
-    # check if we failed to find a particular template; this warrants exiting early
+        # we have a match - if this is a file we can stop, otherwise recurse
+        if success := (True if isinstance(node, File) else recursively_compare_trees(node.children, template.children, allow_extra)):
+          break
+    # check if we found a match; if not, might as well quit
     if not success:
-      print(f"Missing template item '{template.name}'!")
+      print(f"Failed to find required template item '{template.name}'.")
       return False
 
-  # check if we want to also verify there aren't any extra files floating around
+  # if we're not allowing extra files we need to verify that each node has a corresponding template item
   if not allow_extra:
     for node in nodes:
       success = False
       for template in templates:
         if node == template:
-          # great! now check the children
-          success = True if isinstance(node, File) else recursively_compare_trees(node.children, template.children, allow_extra)
+          # we have a match - if this is a file we can stop, otherwise recurse
+          if success := (True if isinstance(node, File) else recursively_compare_trees(node.children, template.children, allow_extra)):
+            break
       # check if we failed to find a particular node; this warrants exiting early
       if not success:
-        print(f"Found an extra object floating around: '{node.name}'")
+        print(f"Found extraneous file / directory: '{node.name}'")
         return False
 
-  # success
+  # if we got this far we succeeded
   return True
 
 class Template:
