@@ -112,6 +112,13 @@ class Template:
       check_hidden: Whether or not to consider hidden files.
       allow_extra:  Whether or not to consider extra files an error.
     """
+    # sanity checks
+    assert(os.path.isdir(dirname)), "Templates can only be constructed from a directory."
+
+    # sanitize inputs
+    while dirname.endswith(os.sep):
+      dirname = dirname[:-len(os.sep)]
+
     # extract all files via os.walk
     intermediary = {
       "flags": {
@@ -131,7 +138,7 @@ class Template:
       handle = intermediary["root"]
       for path in roots:
         handle = next(item[path] for item in handle if (isinstance(item, dict) and path in item))
-      
+
       # naively add directories to their place in the hierarchy
       for directory in dirs:
         handle.append({directory : []})
