@@ -1,7 +1,10 @@
+flags:
+  allow_extra: false
+  check_hidden: true
 root:
-- optional: []
+- optional:
+  - optional.txt
+  - optional
+  - optional.py
+  - optional.csv
 - .gitkeep
-- optional.txt
-- optional
-- optional.py
-- optional.csv

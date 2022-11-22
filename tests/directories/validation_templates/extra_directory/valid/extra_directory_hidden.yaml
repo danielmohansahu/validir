@@ -1,28 +1,31 @@
+flags:
+  allow_extra: false
+  check_hidden: true
 root:
-- optional: []
-- whoops: []
-- required: []
+- optional:
+  - optional.txt
+  - optional
+  - optional.py
+  - optional.csv
+- whoops:
+  - .gitkeep
+- required:
+  - metadata:
+    - sample.ext
+    - sample
+    - .hidden
+    - .hidden.ext
+  - textfiles:
+    - text9.txt
+    - text3.txt
+    - text4.txt
+    - text1.txt
+    - text6.txt
+    - text8.txt
+    - text7.txt
+    - text0.txt
+    - text5.txt
+    - text10.txt
+    - text2.txt
+  - required.txt
 - .gitkeep
-- optional.txt
-- optional
-- optional.py
-- optional.csv
-- .gitkeep
-- metadata:
-  - sample.ext
-  - sample
-  - .hidden
-  - .hidden.ext
-- textfiles:
-  - text9.txt
-  - text3.txt
-  - text4.txt
-  - text1.txt
-  - text6.txt
-  - text8.txt
-  - text7.txt
-  - text0.txt
-  - text5.txt
-  - text10.txt
-  - text2.txt
-- required.txt

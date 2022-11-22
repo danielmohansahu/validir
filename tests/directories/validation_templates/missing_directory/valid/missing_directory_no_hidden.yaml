@@ -1,6 +1,9 @@
+flags:
+  allow_extra: false
+  check_hidden: false
 root:
-- optional: []
-- optional.txt
-- optional
-- optional.py
-- optional.csv
+- optional:
+  - optional.txt
+  - optional
+  - optional.py
+  - optional.csv
