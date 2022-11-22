@@ -41,8 +41,6 @@ def recursively_compare_trees(nodes : Sequence[File, Directory], templates : Seq
    - If not 'allow_extra':
      - All nodes must have a corresponding template item. 
   """
-  print(f"  checking\n\t{[n.name for n in nodes]} \n\t{[t.name for t in templates]}")
-  
   # verify that we have a match for all of our required template items
   for template in [t for t in templates if t.required]:
     # iterate through the nodes, trying to find a match
