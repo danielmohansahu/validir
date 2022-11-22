@@ -46,7 +46,9 @@ For more information about any command line options, call `validir --help`.
 
 **Via Package Manager**
 
-Todo!
+```bash
+python3 -m pip install validir
+```
 
 **Via Source**
 
