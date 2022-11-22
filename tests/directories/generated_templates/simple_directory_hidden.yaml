@@ -1,3 +1,6 @@
+flags:
+  allow_extra: false
+  check_hidden: true
 root:
 - optional:
   - optional.txt
