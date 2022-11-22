@@ -1,0 +1,8 @@
+flags:
+  allow_extra: false
+  check_hidden: false
+root:
+  - optional:
+    - "optional*"     # allow all files starting with 'optional'
+    - "*.txt"         # allow all text files
+  - "*": []           # any other folders are allowed

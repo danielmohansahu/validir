@@ -1,0 +1,29 @@
+flags:
+  allow_extra: false
+  check_hidden: true
+root:
+- optional:
+  - optional.txt
+  - optional
+  - optional.py
+  - optional.csv
+- required:
+  - metadata:
+    - sample.ext
+    - sample
+    - .hidden
+    # - .hidden.ext     # we should error out because this file shows up
+  - textfiles:
+    - text9.txt
+    - text3.txt
+    - text4.txt
+    - text1.txt
+    - text6.txt
+    - text8.txt
+    - text7.txt
+    - text0.txt
+    - text5.txt
+    - text10.txt
+    - text2.txt
+  - required.txt
+- .gitkeep

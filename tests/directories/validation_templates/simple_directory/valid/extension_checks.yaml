@@ -1,0 +1,14 @@
+flags:
+  allow_extra: false
+  check_hidden: false
+root:
+- optional:
+  - optional      # required extensionless file 'optional'
+  - "optional.*"  # all other optional files are optional
+- required:
+  - metadata:
+    - sample.ext
+    - sample
+  - textfiles:
+    - "*.txt"     # only text files allowed here, but it could be empty
+  - required.txt

@@ -1,0 +1,9 @@
+flags:
+  allow_extra: false
+  check_hidden: false
+root:
+- optional: ["*"]
+- required:
+  - metadata: ["*"]
+  - textfiles: ["*"]
+  # - required.txt    this should fail because we find 'required.txt'

@@ -1,0 +1,10 @@
+# ensure the given directories are there, but they can have anything in them
+flags:
+  allow_extra: false
+  check_hidden: false
+root:
+- optional: ["*"]
+- required:
+  - metadata: ["*"]
+  - textfiles: ["*"]
+  - required.txt
