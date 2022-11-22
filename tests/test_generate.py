@@ -27,11 +27,11 @@ def test_generation():
     # iterate through all test directories
     for directory in DIRECTORIES:
         # generate templates with a variety of conditions
-        template_hidden = Template.construct(directory, check_hidden=True)
-        template_no_hidden = Template.construct(directory, check_hidden=False)
+        template_hidden = Template.construct(directory, check_hidden=True, allow_extra=True)
+        template_no_hidden = Template.construct(directory, check_hidden=False, allow_extra=True)
         
         # compare to "ground truth"
-        with open(os.path.join(TRUTH_DIR, directory + "_hidden.yaml", "r")) as yamlfile:
+        with open(os.path.join(TRUTH_DIR, directory + "_hidden.yaml"), "r") as yamlfile:
             assert yaml.safe_load(yamlfile)["root"] == template_hidden.dump()["root"]
-        with open(os.path.join(TRUTH_DIR, directory + "_no_hidden.yaml", "r")) as yamlfile:
+        with open(os.path.join(TRUTH_DIR, directory + "_no_hidden.yaml"), "r") as yamlfile:
             assert yaml.safe_load(yamlfile)["root"] == template_no_hidden.dump()["root"]

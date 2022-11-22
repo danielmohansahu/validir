@@ -93,10 +93,10 @@ class Template:
     assert isinstance(raw["root"], list), "'root' key must be a list."
 
     # recursively convert to our internal tree representation
-    root = Directory("root", False, [])
-    recursively_build_tree(raw["root"], root, check_hidden)
+    root = Directory.load("root")
+    recursively_build_tree(raw["root"], root, raw["flags"]["check_hidden"])
     
-    return root, check_hidden, allow_extra
+    return root, raw["flags"]["check_hidden"], raw["flags"]["allow_extra"]
 
   @staticmethod
   def construct(dirname : str, check_hidden : bool, allow_extra) -> Template:
