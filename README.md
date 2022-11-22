@@ -63,3 +63,11 @@ Installation verification is done via [tox](https://tox.wiki/en/latest/). To run
 # from within validir directory
 tox
 ```
+
+## Errata
+
+PEP8 checks:
+
+```bash
+pycodestyle --ignore=E201,E202,E203,E266 --max-line-length=100 --indent-size=2 .
+```

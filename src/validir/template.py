@@ -17,7 +17,10 @@ import yaml
 # Custom
 from .types import Directory, File
 
-def recursively_build_tree(node : [str, list, dict], result : [File, Dictionary], check_hidden : bool):
+
+def recursively_build_tree(node : [str, list, dict],
+                           result : [File, Dictionary],
+                           check_hidden : bool):
   # helper function to convert a dictionary of YAML keys to a linked tree structure
   if isinstance(node, str):
     if not (f := File.load(node)).hidden or check_hidden:
@@ -26,20 +29,23 @@ def recursively_build_tree(node : [str, list, dict], result : [File, Dictionary]
     for item in node:
       recursively_build_tree(item, result, check_hidden)
   elif isinstance(node, dict):
-    for key,val in node.items():
+    for key, val in node.items():
       if not (d := Directory.load(key)).hidden or check_hidden:
         result.children.append(d)
         recursively_build_tree(val, result.children[-1], check_hidden)
   else:
     raise KeyError("Encountered unexpected key type - only [str, list, dict] are supported.")
 
-def recursively_compare_trees(nodes : Sequence[File, Directory], templates : Sequence[File, Directory], allow_extra : bool) -> bool:
+
+def recursively_compare_trees(nodes : Sequence[File, Directory],
+                              templates : Sequence[File, Directory],
+                              allow_extra : bool) -> bool:
   """ Core matching logic to verify the correctness of a given directory.
-  
+
   Essentially this boils down to the following set of rules for a given layer:
    - All required template items (files and directories) must have a corresponding node.
    - If not 'allow_extra':
-     - All nodes must have a corresponding template item. 
+     - All nodes must have a corresponding template item.
   """
   # verify that we have a match for all of our required template items
   for template in [t for t in templates if t.required]:
@@ -48,21 +54,25 @@ def recursively_compare_trees(nodes : Sequence[File, Directory], templates : Seq
     for node in nodes:
       if node == template:
         # we have a match - if this is a file we can stop, otherwise recurse
-        if success := (True if isinstance(node, File) else recursively_compare_trees(node.children, template.children, allow_extra)):
+        if success := (True if
+                       isinstance(node, File) else
+                       recursively_compare_trees(node.children, template.children, allow_extra)):
           break
     # check if we found a match; if not, might as well quit
     if not success:
       print(f"Failed to find required template item '{template.name}'.")
       return False
 
-  # if we're not allowing extra files we need to verify that each node has a corresponding template item
+  # if we're not allowing extra files we need to verify that each node has a template item
   if not allow_extra:
     for node in nodes:
       success = False
       for template in templates:
         if node == template:
           # we have a match - if this is a file we can stop, otherwise recurse
-          if success := (True if isinstance(node, File) else recursively_compare_trees(node.children, template.children, allow_extra)):
+          if success := (True if
+                         isinstance(node, File) else
+                         recursively_compare_trees(node.children, template.children, allow_extra)):
             break
       # check if we failed to find a particular node; this warrants exiting early
       if not success:
@@ -71,6 +81,7 @@ def recursively_compare_trees(nodes : Sequence[File, Directory], templates : Seq
 
   # if we got this far we succeeded
   return True
+
 
 class Template:
   def __init__(self, stream):
@@ -85,7 +96,7 @@ class Template:
 
     # perform a deep comparison
     return recursively_compare_trees([other.root], [self.root], self.allow_extra)
-    
+
   def dump(self) -> dict:
     """ Dump internal representation to a dictionary. """
     result = self.root.dump()
@@ -110,20 +121,20 @@ class Template:
     # recursively convert to our internal tree representation
     root = Directory.load("root")
     recursively_build_tree(raw["root"], root, raw["flags"]["check_hidden"])
-    
+
     return root, raw["flags"]["check_hidden"], raw["flags"]["allow_extra"]
 
   @staticmethod
   def construct(dirname : str, check_hidden : bool, allow_extra) -> Template:
     """ Factory method to construct from a directory.
-    
+
     Args:
       dirname:      The directory to use as a template.
       check_hidden: Whether or not to consider hidden files.
       allow_extra:  Whether or not to consider extra files an error.
     """
     # sanity checks
-    assert(os.path.isdir(dirname)), "Templates can only be constructed from a directory."
+    assert (os.path.isdir(dirname)), "Templates can only be constructed from a directory."
 
     # sanitize inputs
     while dirname.endswith(os.sep):

@@ -27,14 +27,16 @@ INVALID = glob.glob(os.path.join("example_templates", "invalid_*.yaml"))
 
 ############################ TEST FUNCTIONS ###################################
 
+
 def test_invalid_load():
     # make sure we fail when attempting to load the bad templates
     for template in INVALID:
         with pytest.raises(Exception):
             Template(template)
 
+
 def test_load_and_dump():
-    # make sure we can load the following and dump back into the exact same structure    
+    # make sure we can load the following and dump back into the exact same structure
     for template in VALID:
         # grab the raw data
         with open(template, "r") as yamlfile:

@@ -22,13 +22,14 @@ TEMPLATES = "directories/validation_templates"
 
 ############################ TEST FUNCTIONS ###################################
 
+
 def test_validation():
     # iterate through all test directories
     for directory in DIRECTORIES:
         # find the corresponding templates
         valid_templates = glob.glob(os.path.join(TEMPLATES, directory, "valid", "*.yaml"))
         invalid_templates = glob.glob(os.path.join(TEMPLATES, directory, "invalid", "*.yaml"))
-        
+
         # make sure the valid templates succeed
         for template in valid_templates:
             print(f"Validating '{directory}' against '{template}'")
@@ -40,4 +41,3 @@ def test_validation():
             print(f"Validating '{directory}' against '{template}'")
             with open(template, "r") as yamlfile:
                 assert (not Template(yamlfile).validate(os.path.join("directories", directory)))
-
