@@ -1,14 +1,5 @@
-# nontrivial sample template.
+# simple trivial example - empty directory
 flags:
-  check_hidden: True  # Always consider hidden files.
-  allow_extra: True   # Don't consider extra files as errors.
-root:
-  - ".hidden_file"
-  - "*.ext"
-  - "strict_match_file.txt"
-  - "required_directory":
-    - "required_directory_2":
-      - "required_file.test"
-      - "[optional_file.test]"
-  - "[optional_directory]":
-    - "optional_directory"
+  check_hidden: True
+  allow_extra: False
+root: []

@@ -1,0 +1,6 @@
+# invalid fnmatch syntax
+flags:
+  check_hidden: True  # Always consider hidden files.
+  allow_extra: True   # Don't consider extra files as errors.
+root:
+  - "%_test.py"

@@ -1,0 +1,6 @@
+# invalid yaml syntax
+flags:
+  allow_extra: True
+  check_hidden: False
+root:
+  - [glob0]

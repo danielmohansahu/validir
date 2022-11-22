@@ -1,0 +1,9 @@
+# trivial example - we require a few directories, but any other files are ok
+flags:
+  check_hidden: False
+  allow_extra: True
+root:
+  - foo:
+    - bar:
+      - foobar:
+        - required.txt

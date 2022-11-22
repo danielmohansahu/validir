@@ -1,0 +1,10 @@
+# pattern matching redux
+flags:
+  check_hidden: False
+  allow_extra: False
+root:
+  - foo:
+    - "*.???"     # only three-element file extensions allowed
+  - bar:
+    - "script[0-9].py"  # scripts 0-9 are allowed
+  - "*": []           # any other optional folders are allowed on this level

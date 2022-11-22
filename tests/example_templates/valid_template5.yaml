@@ -1,0 +1,11 @@
+# more complex pattern matching
+flags:
+  check_hidden: False
+  allow_extra: False
+root:
+  - foo:
+    - "*.txt"
+  - bar:
+    - "*.py"
+  - lorum:
+    - "*"

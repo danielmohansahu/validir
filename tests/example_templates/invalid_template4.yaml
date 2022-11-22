@@ -1,0 +1,7 @@
+# missing a required flag
+flags:
+  check_hidden: True
+root:
+  - bar:
+    - test.txt
+    - .hhid

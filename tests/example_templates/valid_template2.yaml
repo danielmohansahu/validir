@@ -1,0 +1,6 @@
+# simple trivial example - single required file
+flags:
+  check_hidden: True
+  allow_extra: False
+root:
+ - required.txt

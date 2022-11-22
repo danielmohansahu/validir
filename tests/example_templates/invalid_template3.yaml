@@ -1,0 +1,11 @@
+# template where directory structure isn't composed of lists
+flags:
+  check_hidden: True
+  allow_extra: True
+root:
+  foo:
+    bar:
+     - test.txt
+      - .hhid
+  gooble:
+     - test

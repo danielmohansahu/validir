@@ -1,0 +1,6 @@
+# simple trivial example - anything goes
+flags:
+  check_hidden: True
+  allow_extra: False
+root:
+ - "*"
