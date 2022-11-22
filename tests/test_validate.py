@@ -31,9 +31,11 @@ def test_validation():
         
         # make sure the valid templates succeed
         for template in valid_templates:
-            assert (Template(template).validate(os.path.join("directories", directory)))
+            with open(template, "r") as yamlfile:
+                assert (Template(yamlfile).validate(os.path.join("directories", directory)))
 
         # make sure the invalid templates fail
         for template in invalid_templates:
-            assert (not Template(template).validate(os.path.join("directories", directory)))
+            with open(template, "r") as yamlfile:
+                assert (not Template(yamlfile).validate(os.path.join("directories", directory)))
 
