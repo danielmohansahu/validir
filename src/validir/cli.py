@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 # STL
+import os
 import typing
 import argparse
 
@@ -26,14 +27,22 @@ def parse_args():
     generate_parser = subparsers.add_parser('generate', help='Generate a template file from a target directory.')
     generate_parser.add_argument('dirname', help='Root of directory to validate.')
     generate_parser.add_argument('output', help='Output file (yaml format).')
-    generate_parser.add_argument('--process-hidden', action="store_true", help="Don't skip hidden files and directories.")
+    generate_parser.add_argument('--check-hidden', action="store_true",
+                                 help="Also check 'hidden' files.")
+    generate_parser.add_argument('--allow-extra', action="store_true",
+                                 help="Consider the presence of extra files (not specified in the template) an error.")
     generate_parser.set_defaults(func=generate)
     
     return parser.parse_args()
      
 def generate(args):
+  """ Generate a template from the given directory. """
+
+  # sanity checks
+  assert (os.path.isdir(args.dirname)), "Input directory must be, well, a directory."
+  
   # construct core template
-  template = Template.construct(args.dirname, args.skip_hidden)
+  template = Template.construct(args.dirname, args.check_hidden, args.allow_extra)
 
   # write to file
   with open(args.output, "w") as yamlfile:
@@ -42,6 +51,10 @@ def generate(args):
 
 def validate(args) -> bool:
   """ Validate the given directory against the given template. """
+
+  # sanity checks
+  assert (os.path.isdir(args.dirname)), "Input directory must be, well, a directory."
+
   template = Template.generate(args.templatefile)
   
   if (success := template.validate(args.dirname)):

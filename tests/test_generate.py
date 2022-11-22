@@ -27,8 +27,8 @@ def test_generation():
     # iterate through all test directories
     for directory in DIRECTORIES:
         # generate templates with a variety of conditions
-        template_hidden = Template.construct(directory, skip_hidden=False)
-        template_no_hidden = Template.construct(directory, skip_hidden=True)
+        template_hidden = Template.construct(directory, check_hidden=True)
+        template_no_hidden = Template.construct(directory, check_hidden=False)
         
         # compare to "ground truth"
         with open(os.path.join(TRUTH_DIR, directory + "_hidden.yaml", "r")) as yamlfile:

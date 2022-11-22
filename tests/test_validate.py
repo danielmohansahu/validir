@@ -30,7 +30,7 @@ def test_validation():
         invalid_templates = glob.glob(os.path.join(TEMPLATES, directory, "invalid", "*.yaml"))
         
         # make sure the valid templates succeed
-        for template in valid_templates
+        for template in valid_templates:
             assert (Template(template).validate(directory))
 
         # make sure the invalid templates fail
