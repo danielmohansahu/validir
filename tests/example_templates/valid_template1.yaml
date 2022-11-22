@@ -1,6 +1,7 @@
 # nontrivial sample template.
-skip_hidden: False  # Always consider hidden files.
-allow_extra: True   # Don't consider extra files as errors.
+flags:
+  check_hidden: True  # Always consider hidden files.
+  allow_extra: True   # Don't consider extra files as errors.
 root:
   - ".hidden_file"
   - "*.ext"

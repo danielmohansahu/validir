@@ -17,7 +17,7 @@ import yaml
 from validir.template import Template
 
 # test directories and the corresponding templates
-DIRECTORIES = ["directories/extra_directory", "directories/missing_directory", "directories/simple_directory"]
+DIRECTORIES = ["extra_directory", "missing_directory", "simple_directory"]
 TEMPLATES = "directories/validation_templates"
 
 ############################ TEST FUNCTIONS ###################################
@@ -31,9 +31,9 @@ def test_validation():
         
         # make sure the valid templates succeed
         for template in valid_templates:
-            assert (Template(template).validate(directory))
+            assert (Template(template).validate(os.path.join("directories", directory)))
 
         # make sure the invalid templates fail
         for template in invalid_templates:
-            assert (not Template(template).validate(directory))
+            assert (not Template(template).validate(os.path.join("directories", directory)))
 
