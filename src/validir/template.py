@@ -78,7 +78,12 @@ class Template:
     
   def dump(self) -> dict:
     """ Dump internal representation to a dictionary. """
-    return self.root.dump()
+    result = self.root.dump()
+    result["flags"] = {
+      "check_hidden" : self.check_hidden,
+      "allow_extra" : self.allow_extra
+    }
+    return result
 
   @staticmethod
   def load(stream : str):
