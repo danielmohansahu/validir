@@ -6,6 +6,7 @@ from __future__ import annotations
 
 # STL
 import os
+import sys
 import typing
 import argparse
 
@@ -54,20 +55,19 @@ def generate(args):
   print(f"Wrote extracted template from '{args.dirname}' to '{args.output}'")
 
 
-def validate(args) -> bool:
+def validate(args):
   """ Validate the given directory against the given template. """
 
   # sanity checks
   assert (os.path.isdir(args.dirname)), "Input directory must be, well, a directory."
 
-  template = Template.generate(args.templatefile)
-
-  if (success := template.validate(args.dirname)):
-    print(f"Directory {args.dirname} matches template {args.templatefile}")
-  else:
-    print(f"Directory {args.dirname} DOES NOT MATCH template {args.templatefile}")
-  return success
-
+  with open(args.template, "r") as yamlfile:
+    if (success := Template(yamlfile).validate(args.dirname)):
+      print(f"Directory {args.dirname} matches template {args.template}")
+      sys.exit(0)
+    else:
+      print(f"Directory {args.dirname} DOES NOT MATCH template {args.template}")
+      sys.exit(1)
 
 def main():
   args = parse_args()
